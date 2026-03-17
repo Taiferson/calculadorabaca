@@ -3,202 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Trading Esportivo</title>
+    <title>BACABET • Calculadora de Lay</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', Roboto, system-ui, sans-serif;
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            max-width: 500px;
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b0f0b 0%, #1a1f1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Elementos decorativos animados (bolhas verdes) */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 150, 0.08), transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            top: -100px;
+            left: -100px;
+            animation-duration: 18s;
+        }
+
+        body::after {
+            bottom: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at 70% 70%, rgba(0, 200, 120, 0.1), transparent 70%);
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            100% { transform: translate(40px, 40px) scale(1.2); opacity: 0.6; }
+        }
+
+        .card {
+            background: rgba(10, 15, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 255, 150, 0.15);
+            border-radius: 48px;
+            padding: 2.5rem 2rem;
+            max-width: 550px;
             width: 100%;
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 255, 150, 0.2) inset, 0 0 30px rgba(0, 255, 150, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            z-index: 10;
+            animation: cardAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
+
+        .card:hover {
+            box-shadow: 0 30px 60px -10px #000, 0 0 0 2px #00ff99 inset, 0 0 40px #00ff9966;
+            transform: scale(1.01);
+        }
+
+        @keyframes cardAppear {
+            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 10px #00ffaa, 2px 2px 0 #00000050;
+            margin-bottom: 0.25rem;
+            line-height: 1.1;
+            word-break: break-word;
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        h1 span {
+            background: linear-gradient(135deg, #b0ffd0, #00ffaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            display: inline-block;
+            animation: glowPulse 3s infinite;
         }
+
+        @keyframes glowPulse {
+            0% { filter: drop-shadow(0 0 5px #00ffaa); }
+            50% { filter: drop-shadow(0 0 20px #00ffcc); }
+            100% { filter: drop-shadow(0 0 5px #00ffaa); }
+        }
+
+        .sub {
+            text-align: center;
+            color: #aaa;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px dashed #2a4a3a;
+            padding-bottom: 0.8rem;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
         label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cfcfcf;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            transition: color 0.2s;
         }
+
+        label i {
+            color: #00ffaa;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
         input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
+            padding: 1.1rem 1.5rem;
+            background: #111612;
+            border: 2px solid #2a3a32;
+            border-radius: 40px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
         }
+
+        input:focus {
+            border-color: #00ffaa;
+            background: #1c241e;
+            box-shadow: 0 0 0 4px rgba(0, 255, 150, 0.2), inset 0 2px 8px #000;
+        }
+
+        input::placeholder {
+            color: #4f5e55;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin: 2.8rem 0 2.2rem;
+        }
+
         button {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
+            flex: 1;
+            padding: 1.1rem 0.5rem;
             border: none;
-            border-radius: 5px;
-            font-size: 18px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: 0.2s;
+            box-shadow: 0 10px 20px -8px #000000cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        button:hover {
-            background-color: #218838;
+
+        .btn-calcular {
+            background: #00ffaa;
+            color: #041008;
+            border: 2px solid #b2ffd0;
         }
+
+        .btn-calcular:hover {
+            background: #70ffc0;
+            transform: translateY(-3px);
+            box-shadow: 0 18px 25px -10px #00ffaa, 0 0 0 2px white;
+        }
+
+        .btn-limpar {
+            background: transparent;
+            color: #e0e0e0;
+            border: 2px solid #3b4e44;
+        }
+
+        .btn-limpar:hover {
+            background: #26332c;
+            border-color: #aaaaaa;
+            transform: translateY(-2px);
+        }
+
         .resultados {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border-left: 4px solid #28a745;
+            background: rgba(0, 20, 10, 0.6);
+            border-radius: 36px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid #2e4a3a;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s;
         }
-        .resultado-item {
+
+        .linha-resultado {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 18px;
+            align-items: baseline;
+            padding: 0.8rem 0.2rem;
+            border-bottom: 1px dashed #2d463a;
+            color: white;
+            font-size: 1.1rem;
         }
-        .resultado-item span:first-child {
-            font-weight: bold;
-            color: #555;
+
+        .linha-resultado:last-child {
+            border-bottom: none;
         }
-        .positivo {
-            color: #28a745;
+
+        .rotulo {
+            font-weight: 400;
+            color: #b0c0b5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .negativo {
-            color: #dc3545;
+
+        .valor {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-shadow: 0 0 6px #00ffaa;
+            transition: transform 0.2s;
+            animation: fadeInUp 0.4s ease-out;
         }
-        .info {
-            font-size: 14px;
-            color: #888;
-            margin-top: 10px;
+
+        .verde {
+            color: #00ffaa;
+        }
+
+        .destaque {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #b0ffcf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .pequeno {
+            font-size: 0.9rem;
+            color: #7b8b82;
+            margin-top: 1rem;
             text-align: center;
+            font-weight: 300;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Emojis como ícones (fallback) */
+        .icone {
+            filter: drop-shadow(0 0 5px #00ffaa);
+        }
+
+        /* Responsivo */
+        @media (max-width: 450px) {
+            .card {
+                padding: 1.8rem 1.2rem;
+            }
+            h1 {
+                font-size: 2.4rem;
+            }
+            input {
+                font-size: 1.2rem;
+                padding: 0.9rem 1.2rem;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .valor {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Calculadora de Trading</h1>
-        <div class="form-group">
-            <label for="responsabilidade">Responsabilidade (R$):</label>
-            <input type="number" id="responsabilidade" step="0.01" min="0.01" value="1000.00" required>
-        </div>
-        <div class="form-group">
-            <label for="oddEntrada">Odd de Entrada:</label>
-            <input type="number" id="oddEntrada" step="0.01" min="1.01" value="9.00" required>
-        </div>
-        <div class="form-group">
-            <label for="oddSaida">Odd de Saída:</label>
-            <input type="number" id="oddSaida" step="0.01" min="0.01" value="" placeholder="Ex: 8.00" required>
-        </div>
-        <div class="form-group">
-            <label for="minuto">Minuto do Fechamento (opcional):</label>
-            <input type="number" id="minuto" step="1" min="0" placeholder="Ex: 75">
-        </div>
-        <button onclick="calcular()">Calcular</button>
+    <div class="card">
+        <h1>BACA<span>BET</span></h1>
+        <div class="sub">calculadora de lay · taxa 3,5%</div>
 
-        <div class="resultados" id="resultados" style="display: none;">
-            <div class="resultado-item">
-                <span>Minuto do fechamento:</span>
-                <span id="minutoExibido">-</span>
-            </div>
-            <div class="resultado-item">
-                <span>Resultado bruto:</span>
-                <span id="resultadoBruto">R$ 0,00</span>
-            </div>
-            <div class="resultado-item">
-                <span>Resultado líquido (com desconto de 3,5% só se lucro):</span>
-                <span id="resultadoLiquido">R$ 0,00</span>
-            </div>
-            <div class="resultado-item">
-                <span>Porcentagem:</span>
-                <span id="porcentagem">0,00%</span>
-            </div>
-            <div class="info" id="info"></div>
+        <!-- Campo alterado para "Odd do Lay" -->
+        <div class="input-group">
+            <label><span class="icone">🎯</span> Odd do Lay</label>
+            <input type="number" id="odd" step="0.01" min="1.01" placeholder="ex: 2.50 (odd que você oferece)" value="2.0" autofocus>
         </div>
+
+        <div class="input-group">
+            <label><span class="icone">🛡️</span> Responsabilidade (R$)</label>
+            <input type="number" id="responsabilidade" step="0.01" min="0.01" placeholder="valor que você arrisca" value="100.00">
+        </div>
+
+        <div class="button-group">
+            <button class="btn-calcular" id="calcularBtn"> <span>⚡</span> Calcular</button>
+            <button class="btn-limpar" id="limparBtn"> <span>🔄</span> Limpar</button>
+        </div>
+
+        <div class="resultados" id="resultados">
+            <div class="linha-resultado">
+                <span class="rotulo"><span class="icone">📦</span> Lucro Bruto (stake)</span>
+                <span class="valor" id="lucroBruto">R$ 0,00</span>
+            </div>
+            <div class="linha-resultado">
+                <span class="rotulo"><span class="icone">💎</span> Lucro Líquido <span style="font-size:0.8rem;">( -3,5% )</span></span>
+                <span class="valor verde" id="lucroLiquido">R$ 0,00</span>
+            </div>
+            <div class="linha-resultado">
+                <span class="rotulo"><span class="icone">📈</span> % Ganho (ROI)</span>
+                <span class="valor destaque" id="porcentagem">0,00%</span>
+            </div>
+            <div class="linha-resultado">
+                <span class="rotulo"><span class="icone">💰</span> Ganho em R$</span>
+                <span class="valor verde" id="ganhoReais">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="pequeno">* comissão da corretora: 3,5% sobre o lucro bruto (stake)</div>
     </div>
 
     <script>
-        function calcular() {
-            // Obter valores dos inputs
-            const responsabilidade = parseFloat(document.getElementById('responsabilidade').value);
-            const oddEntrada = parseFloat(document.getElementById('oddEntrada').value);
-            const oddSaida = parseFloat(document.getElementById('oddSaida').value);
-            const minuto = document.getElementById('minuto').value;
+        (function() {
+            const oddInput = document.getElementById('odd');
+            const respInput = document.getElementById('responsabilidade');
+            const calcularBtn = document.getElementById('calcularBtn');
+            const limparBtn = document.getElementById('limparBtn');
 
-            // Validações básicas
-            if (isNaN(responsabilidade) || responsabilidade <= 0) {
-                alert('Por favor, insira uma responsabilidade válida (maior que zero).');
-                return;
-            }
-            if (isNaN(oddEntrada) || oddEntrada < 1.01) {
-                alert('Por favor, insira uma odd de entrada válida (maior ou igual a 1.01).');
-                return;
-            }
-            if (isNaN(oddSaida) || oddSaida <= 0) {
-                alert('Por favor, insira uma odd de saída válida (maior que zero).');
-                return;
-            }
-
-            // Cálculo do lucro/prejuízo bruto
-            const lucroBruto = responsabilidade * (oddEntrada / oddSaida - 1);
-            const porcentagem = (oddEntrada / oddSaida - 1) * 100;
-
-            // Aplicar desconto de 3,5% apenas se houver lucro
-            let lucroLiquido = lucroBruto;
-            if (lucroBruto > 0) {
-                lucroLiquido = lucroBruto * (1 - 0.035); // desconto de 3,5%
-            }
-
-            // Formatação dos valores
-            const formatoReais = (valor) => {
-                return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            };
-
-            // Exibir resultados
-            document.getElementById('resultados').style.display = 'block';
-            document.getElementById('minutoExibido').innerText = minuto ? minuto + '° minuto' : 'Não informado';
-
-            const resultadoBrutoEl = document.getElementById('resultadoBruto');
-            const resultadoLiquidoEl = document.getElementById('resultadoLiquido');
+            const lucroBrutoEl = document.getElementById('lucroBruto');
+            const lucroLiquidoEl = document.getElementById('lucroLiquido');
             const porcentagemEl = document.getElementById('porcentagem');
-            const infoEl = document.getElementById('info');
+            const ganhoReaisEl = document.getElementById('ganhoReais');
 
-            resultadoBrutoEl.innerText = formatoReais(lucroBruto);
-            resultadoLiquidoEl.innerText = formatoReais(lucroLiquido);
-            porcentagemEl.innerText = porcentagem.toFixed(2).replace('.', ',') + '%';
+            const TAXA = 0.035; // 3,5%
 
-            // Cor das fontes conforme lucro/prejuízo
-            if (lucroBruto > 0) {
-                resultadoBrutoEl.className = 'positivo';
-                resultadoLiquidoEl.className = 'positivo';
-                porcentagemEl.className = 'positivo';
-                infoEl.innerText = 'Desconto de 3,5% aplicado sobre o lucro.';
-            } else if (lucroBruto < 0) {
-                resultadoBrutoEl.className = 'negativo';
-                resultadoLiquidoEl.className = 'negativo';
-                porcentagemEl.className = 'negativo';
-                infoEl.innerText = 'Prejuízo: nenhum desconto aplicado.';
-            } else {
-                resultadoBrutoEl.className = '';
-                resultadoLiquidoEl.className = '';
-                porcentagemEl.className = '';
-                infoEl.innerText = 'Operação zerada, sem lucro ou prejuízo.';
+            function formatMoney(valor) {
+                return 'R$ ' + valor.toFixed(2).replace('.', ',');
             }
-        }
+
+            function calcular() {
+                // pegar valores e substituir vírgula por ponto, se necessário
+                let oddStr = oddInput.value.trim().replace(',', '.');
+                let respStr = respInput.value.trim().replace(',', '.');
+
+                let odd = parseFloat(oddStr);
+                let responsabilidade = parseFloat(respStr);
+
+                // validações
+                if (isNaN(odd) || odd <= 1) {
+                    alert('Odd inválida. Digite um número maior que 1 (ex: 2.0)');
+                    oddInput.focus();
+                    return;
+                }
+                if (isNaN(responsabilidade) || responsabilidade <= 0) {
+                    alert('Responsabilidade deve ser um valor positivo.');
+                    respInput.focus();
+                    return;
+                }
+
+                // Cálculos para LAY: 
+                // responsabilidade = stake * (odd - 1)  => stake (lucro bruto) = responsabilidade / (odd - 1)
+                const stake = responsabilidade / (odd - 1);   // lucro bruto (antes da taxa)
+                const lucroBruto = stake;
+                const lucroLiquido = lucroBruto * (1 - TAXA);
+                const percentual = (lucroLiquido / responsabilidade) * 100;
+                const ganhoReais = lucroLiquido;
+
+                // Atualizar DOM com animação
+                lucroBrutoEl.textContent = formatMoney(lucroBruto);
+                lucroLiquidoEl.textContent = formatMoney(lucroLiquido);
+                porcentagemEl.textContent = percentual.toFixed(2).replace('.', ',') + '%';
+                ganhoReaisEl.textContent = formatMoney(ganhoReais);
+
+                // Pequeno toque: uma classe para piscar (opcional)
+                [lucroBrutoEl, lucroLiquidoEl, porcentagemEl, ganhoReaisEl].forEach(el => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; // reflow
+                    el.style.animation = 'fadeInUp 0.3s ease-out';
+                });
+            }
+
+            function limpar() {
+                oddInput.value = '';
+                respInput.value = '';
+                lucroBrutoEl.textContent = 'R$ 0,00';
+                lucroLiquidoEl.textContent = 'R$ 0,00';
+                porcentagemEl.textContent = '0,00%';
+                ganhoReaisEl.textContent = 'R$ 0,00';
+                oddInput.focus();
+            }
+
+            // Event listeners
+            calcularBtn.addEventListener('click', calcular);
+            limparBtn.addEventListener('click', limpar);
+
+            // Permitir calcular com Enter (em qualquer input)
+            [oddInput, respInput].forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        calcular();
+                    }
+                });
+            });
+
+            // Calcular ao carregar se houver valores padrão
+            window.addEventListener('load', () => {
+                if (oddInput.value && respInput.value) {
+                    calcular();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
