@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Trading Esportivo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .resultados {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+        .resultado-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .resultado-item span:first-child {
+            font-weight: bold;
+            color: #555;
+        }
+        .positivo {
+            color: #28a745;
+        }
+        .negativo {
+            color: #dc3545;
+        }
+        .info {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Trading</h1>
+        <div class="form-group">
+            <label for="responsabilidade">Responsabilidade (R$):</label>
+            <input type="number" id="responsabilidade" step="0.01" min="0.01" value="1000.00" required>
+        </div>
+        <div class="form-group">
+            <label for="oddEntrada">Odd de Entrada:</label>
+            <input type="number" id="oddEntrada" step="0.01" min="1.01" value="9.00" required>
+        </div>
+        <div class="form-group">
+            <label for="oddSaida">Odd de Saída:</label>
+            <input type="number" id="oddSaida" step="0.01" min="0.01" value="" placeholder="Ex: 8.00" required>
+        </div>
+        <div class="form-group">
+            <label for="minuto">Minuto do Fechamento (opcional):</label>
+            <input type="number" id="minuto" step="1" min="0" placeholder="Ex: 75">
+        </div>
+        <button onclick="calcular()">Calcular</button>
+
+        <div class="resultados" id="resultados" style="display: none;">
+            <div class="resultado-item">
+                <span>Minuto do fechamento:</span>
+                <span id="minutoExibido">-</span>
+            </div>
+            <div class="resultado-item">
+                <span>Resultado bruto:</span>
+                <span id="resultadoBruto">R$ 0,00</span>
+            </div>
+            <div class="resultado-item">
+                <span>Resultado líquido (com desconto de 3,5% só se lucro):</span>
+                <span id="resultadoLiquido">R$ 0,00</span>
+            </div>
+            <div class="resultado-item">
+                <span>Porcentagem:</span>
+                <span id="porcentagem">0,00%</span>
+            </div>
+            <div class="info" id="info"></div>
+        </div>
+    </div>
+
+    <script>
+        function calcular() {
+            // Obter valores dos inputs
+            const responsabilidade = parseFloat(document.getElementById('responsabilidade').value);
+            const oddEntrada = parseFloat(document.getElementById('oddEntrada').value);
+            const oddSaida = parseFloat(document.getElementById('oddSaida').value);
+            const minuto = document.getElementById('minuto').value;
+
+            // Validações básicas
+            if (isNaN(responsabilidade) || responsabilidade <= 0) {
+                alert('Por favor, insira uma responsabilidade válida (maior que zero).');
+                return;
+            }
+            if (isNaN(oddEntrada) || oddEntrada < 1.01) {
+                alert('Por favor, insira uma odd de entrada válida (maior ou igual a 1.01).');
+                return;
+            }
+            if (isNaN(oddSaida) || oddSaida <= 0) {
+                alert('Por favor, insira uma odd de saída válida (maior que zero).');
+                return;
+            }
+
+            // Cálculo do lucro/prejuízo bruto
+            const lucroBruto = responsabilidade * (oddEntrada / oddSaida - 1);
+            const porcentagem = (oddEntrada / oddSaida - 1) * 100;
+
+            // Aplicar desconto de 3,5% apenas se houver lucro
+            let lucroLiquido = lucroBruto;
+            if (lucroBruto > 0) {
+                lucroLiquido = lucroBruto * (1 - 0.035); // desconto de 3,5%
+            }
+
+            // Formatação dos valores
+            const formatoReais = (valor) => {
+                return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            };
+
+            // Exibir resultados
+            document.getElementById('resultados').style.display = 'block';
+            document.getElementById('minutoExibido').innerText = minuto ? minuto + '° minuto' : 'Não informado';
+
+            const resultadoBrutoEl = document.getElementById('resultadoBruto');
+            const resultadoLiquidoEl = document.getElementById('resultadoLiquido');
+            const porcentagemEl = document.getElementById('porcentagem');
+            const infoEl = document.getElementById('info');
+
+            resultadoBrutoEl.innerText = formatoReais(lucroBruto);
+            resultadoLiquidoEl.innerText = formatoReais(lucroLiquido);
+            porcentagemEl.innerText = porcentagem.toFixed(2).replace('.', ',') + '%';
+
+            // Cor das fontes conforme lucro/prejuízo
+            if (lucroBruto > 0) {
+                resultadoBrutoEl.className = 'positivo';
+                resultadoLiquidoEl.className = 'positivo';
+                porcentagemEl.className = 'positivo';
+                infoEl.innerText = 'Desconto de 3,5% aplicado sobre o lucro.';
+            } else if (lucroBruto < 0) {
+                resultadoBrutoEl.className = 'negativo';
+                resultadoLiquidoEl.className = 'negativo';
+                porcentagemEl.className = 'negativo';
+                infoEl.innerText = 'Prejuízo: nenhum desconto aplicado.';
+            } else {
+                resultadoBrutoEl.className = '';
+                resultadoLiquidoEl.className = '';
+                porcentagemEl.className = '';
+                infoEl.innerText = 'Operação zerada, sem lucro ou prejuízo.';
+            }
+        }
+    </script>
+</body>
+</html>
